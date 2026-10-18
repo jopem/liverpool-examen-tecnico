@@ -4,9 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Verifica que el contexto de Spring arranca correctamente.
+ * Verifica que el contexto de Spring arranca correctamente, sin necesitar MongoDB: la creación
+ * automática de índices se desactiva porque obliga a conectarse al arrancar.
  */
-@SpringBootTest
+@SpringBootTest(properties = "spring.data.mongodb.auto-index-creation=false")
 class LiverpoolApplicationTests {
 
   /**

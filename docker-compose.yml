@@ -1,0 +1,14 @@
+# MongoDB local para desarrollo y evaluación. Sin autenticación: solo escucha en localhost.
+name: liverpool-incremental
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: liverpool-incremental-mongo
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
