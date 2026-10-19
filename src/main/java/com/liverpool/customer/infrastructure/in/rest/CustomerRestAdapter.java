@@ -10,6 +10,8 @@ import com.liverpool.customer.infrastructure.in.rest.CustomerRequests.CreateCust
 import com.liverpool.customer.infrastructure.in.rest.CustomerRequests.UpdateCustomer;
 import com.liverpool.customer.infrastructure.in.rest.CustomerResponses.AddressResponse;
 import com.liverpool.customer.infrastructure.in.rest.CustomerResponses.CustomerResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Adaptador de entrada REST para clientes y sus direcciones de entrega.
  */
 @RestController
+@Tag(name = "Clientes", description = "Clientes y sus direcciones de entrega")
 @RequestMapping("/api/v1/customers")
 public class CustomerRestAdapter {
 
@@ -58,6 +61,7 @@ public class CustomerRestAdapter {
    * @param request datos del cliente; el {@code userId} es opcional
    * @return 201 con el cliente creado y su ubicación
    */
+  @Operation(summary = "Crea un cliente (el userId es opcional)")
   @PostMapping
   public ResponseEntity<CustomerResponse> create(@Valid @RequestBody CreateCustomer request) {
     CustomerView view = createCustomer.execute(request.toCommand());
@@ -72,6 +76,7 @@ public class CustomerRestAdapter {
    * @param userId identificador del cliente
    * @return el cliente
    */
+  @Operation(summary = "Consulta un cliente con sus pedidos")
   @GetMapping("/{userId}")
   public CustomerResponse get(@PathVariable String userId) {
     return CustomerResponse.from(getCustomer.execute(userId));
@@ -84,6 +89,7 @@ public class CustomerRestAdapter {
    * @param request datos nuevos
    * @return el cliente actualizado
    */
+  @Operation(summary = "Actualiza los datos personales de un cliente")
   @PutMapping("/{userId}")
   public CustomerResponse update(@PathVariable String userId,
       @Valid @RequestBody UpdateCustomer request) {
@@ -97,6 +103,7 @@ public class CustomerRestAdapter {
    * @param request datos de la dirección
    * @return 201 con la dirección creada y su ubicación
    */
+  @Operation(summary = "Agrega una dirección de entrega")
   @PostMapping("/{userId}/delivery-addresses")
   public ResponseEntity<AddressResponse> addAddress(@PathVariable String userId,
       @Valid @RequestBody Address request) {
@@ -112,6 +119,7 @@ public class CustomerRestAdapter {
    * @param userId identificador del cliente
    * @return las direcciones, de la más antigua a la más reciente
    */
+  @Operation(summary = "Lista las direcciones de entrega")
   @GetMapping("/{userId}/delivery-addresses")
   public List<AddressResponse> listAddresses(@PathVariable String userId) {
     return addresses.list(userId).stream().map(AddressResponse::from).toList();
@@ -124,6 +132,7 @@ public class CustomerRestAdapter {
    * @param addressId identificador de la dirección
    * @return la dirección
    */
+  @Operation(summary = "Consulta una dirección de entrega")
   @GetMapping("/{userId}/delivery-addresses/{addressId}")
   public AddressResponse getAddress(@PathVariable String userId,
       @PathVariable String addressId) {
@@ -138,6 +147,7 @@ public class CustomerRestAdapter {
    * @param request datos nuevos
    * @return la dirección actualizada
    */
+  @Operation(summary = "Reemplaza una dirección de entrega")
   @PutMapping("/{userId}/delivery-addresses/{addressId}")
   public AddressResponse replaceAddress(@PathVariable String userId,
       @PathVariable String addressId, @Valid @RequestBody Address request) {
@@ -151,6 +161,7 @@ public class CustomerRestAdapter {
    * @param addressId identificador de la dirección
    * @return 204 sin contenido
    */
+  @Operation(summary = "Elimina una dirección de entrega")
   @DeleteMapping("/{userId}/delivery-addresses/{addressId}")
   public ResponseEntity<Void> removeAddress(@PathVariable String userId,
       @PathVariable String addressId) {
@@ -165,6 +176,7 @@ public class CustomerRestAdapter {
    * @param addressId identificador de la dirección
    * @return 204 sin contenido
    */
+  @Operation(summary = "Fija la dirección predeterminada")
   @PutMapping("/{userId}/delivery-addresses/{addressId}/default")
   public ResponseEntity<Void> setDefaultAddress(@PathVariable String userId,
       @PathVariable String addressId) {

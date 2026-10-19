@@ -3,6 +3,8 @@ package com.liverpool.order.infrastructure.in.rest;
 import com.liverpool.order.application.port.in.GetOrderUseCase;
 import com.liverpool.order.application.port.in.SearchOrdersUseCase;
 import com.liverpool.order.domain.OrderSearchCriteria;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Adaptador de entrada REST para consultar y buscar pedidos (solo lectura).
  */
 @RestController
+@Tag(name = "Pedidos", description = "Consulta y búsqueda de pedidos (solo lectura)")
 @RequestMapping("/api/v1/orders")
 public class OrderRestAdapter {
 
@@ -41,6 +44,7 @@ public class OrderRestAdapter {
    * @param storeName filtro por nombre de tienda
    * @return los pedidos que cumplen todos los criterios
    */
+  @Operation(summary = "Busca pedidos ignorando acentos, mayúsculas y errores mínimos")
   @GetMapping("/search")
   public List<OrderResponse> search(
       @RequestParam(required = false) String q,
@@ -57,6 +61,7 @@ public class OrderRestAdapter {
    * @param orderRef número exacto del pedido
    * @return el pedido con sus artículos
    */
+  @Operation(summary = "Consulta el detalle de un pedido por su número exacto")
   @GetMapping("/{orderRef}")
   public OrderResponse get(@PathVariable String orderRef) {
     return OrderResponse.from(getOrder.execute(orderRef));
