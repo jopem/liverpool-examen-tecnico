@@ -168,3 +168,12 @@ Las reglas de dependencias las verifica [ArchitectureTest](src/test/java/com/liv
 
 - **CheckStyle** (configuración de Google): corre en la fase `validate`; cualquier violación hace fallar el build.
 - **Pruebas unitarias** del dominio, los casos de uso y los adaptadores, y **ArchUnit** para la arquitectura.
+
+## Documentación
+
+Diagrama de alto nivel de la arquitectura:
+
+![Diagrama de alto nivel](docs/arquitectura/diagrama-alto-nivel.png)
+
+- [Diagrama de alto nivel (PDF)](docs/arquitectura/diagrama-alto-nivel.pdf)
+- [Evidencias del desarrollo por fases](docs/evidencias/): una captura por fase, numeradas en el orden en que se construyó cada pieza.
