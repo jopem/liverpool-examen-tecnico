@@ -12,10 +12,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Reglas de arquitectura: hacen cumplir la dirección de las dependencias de la arquitectura
  * hexagonal y el aislamiento entre los módulos {@code customer} y {@code order}.
- *
- * <p>Las reglas usan {@code allowEmptyShould(true)} mientras las fases siguientes incorporan las
- * clases de cada capa; se retira cuando todas las capas tienen clases, para que una regla no
- * pase en vacío por un nombre de paquete mal escrito.
  */
 class ArchitectureTest {
 
@@ -37,7 +33,6 @@ class ArchitectureTest {
         .should().dependOnClassesThat().resideInAnyPackage(
             "org.springframework..", "com.mongodb..", "org.bson..",
             "tools.jackson..", "com.fasterxml.jackson..", "jakarta..")
-        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -48,7 +43,6 @@ class ArchitectureTest {
   void domainDoesNotDependOnOuterLayers() {
     noClasses().that().resideInAPackage("..domain..")
         .should().dependOnClassesThat().resideInAnyPackage("..application..", "..infrastructure..")
-        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -59,7 +53,6 @@ class ArchitectureTest {
   void applicationDoesNotDependOnInfrastructure() {
     noClasses().that().resideInAPackage("..application..")
         .should().dependOnClassesThat().resideInAPackage("..infrastructure..")
-        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -71,7 +64,6 @@ class ArchitectureTest {
   void adaptersDoNotUseHandlersDirectly() {
     noClasses().that().resideInAnyPackage("..infrastructure.in..", "..infrastructure.out..")
         .should().dependOnClassesThat().resideInAPackage("..application.usecase..")
-        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -82,7 +74,6 @@ class ArchitectureTest {
   void customerCoreDoesNotKnowOrder() {
     noClasses().that().resideInAnyPackage("..customer.domain..", "..customer.application..")
         .should().dependOnClassesThat().resideInAPackage("..order..")
-        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -94,7 +85,6 @@ class ArchitectureTest {
     noClasses().that().resideInAPackage("..customer..")
         .should().dependOnClassesThat()
         .resideInAnyPackage("..order.domain..", "..order.infrastructure..")
-        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -105,7 +95,6 @@ class ArchitectureTest {
   void orderDoesNotKnowCustomer() {
     noClasses().that().resideInAPackage("..order..")
         .should().dependOnClassesThat().resideInAPackage("..customer..")
-        .allowEmptyShould(true)
         .check(classes);
   }
 
@@ -116,7 +105,6 @@ class ArchitectureTest {
   void modulesAreFreeOfCycles() {
     slices().matching("com.liverpool.(*)..")
         .should().beFreeOfCycles()
-        .allowEmptyShould(true)
         .check(classes);
   }
 
