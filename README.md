@@ -6,9 +6,28 @@ Servicio backend (Java 21, Spring Boot 4, MongoDB) con arquitectura hexagonal qu
 2. muestra en cada cliente sus **pedidos** (`orders`);
 3. ofrece una **búsqueda tipo type-ahead** de pedidos por número, fecha estimada, tienda y producto.
 
-## Cómo levantarlo en local
+## Requisitos
 
-Requisitos: **Java 21** y **Docker** (solo para MongoDB). No hace falta instalar Maven: el proyecto incluye el wrapper `./mvnw`.
+Hay que tener instalado:
+
+| Herramienta | Para qué | Dónde conseguirla |
+|---|---|---|
+| **Java 21** (JDK) | Compilar y ejecutar la aplicación | <https://adoptium.net/temurin/releases/?version=21> |
+| **Docker** | Ejecutar MongoDB en un contenedor | <https://docs.docker.com/get-started/get-docker/> |
+
+No hace falta instalar Maven: el proyecto incluye el wrapper (`./mvnw`), que descarga la versión que necesita. Tampoco hace falta descargar la imagen de MongoDB a mano: Docker la baja solo la primera vez.
+
+Para comprobar lo que ya tienes instalado:
+
+```bash
+java -version          # debe indicar la versión 21
+docker --version
+docker compose version
+```
+
+Puertos que se usan: **8080** (la aplicación) y **27017** (MongoDB). Deben estar libres.
+
+## Cómo levantarlo en local
 
 ```bash
 docker compose up -d                                          # MongoDB en localhost:27017
@@ -18,9 +37,14 @@ docker compose up -d                                          # MongoDB en local
 - Swagger UI: <http://localhost:8080/swagger-ui.html>
 - OpenAPI (JSON): <http://localhost:8080/v3/api-docs>
 
-El perfil `demo` carga 7 clientes ficticios: los 6 `userId` que existen en el servicio de pedidos y uno sin pedidos. La carga se hace justo después de arrancar y tarda alrededor de un segundo; si ya existen, los omite. Sin el perfil la aplicación arranca sin datos.
+Notas:
 
-Para usar otro MongoDB, define `MONGODB_URI` (por ejemplo `mongodb://host:27017/liverpool`). Para apagar la base: `docker compose down` (con `-v` también borra los datos).
+- **La primera vez tarda más y necesita internet:** se descargan la imagen de MongoDB (cerca de 1 GB), Maven y las dependencias de la aplicación. Las siguientes veces arranca en segundos.
+- **En Windows** el comando es `mvnw.cmd` en lugar de `./mvnw`.
+- **La búsqueda y el campo `orders` dependen de un servicio externo de pedidos,** por lo que necesitan internet. Sin conexión, la aplicación arranca pero la búsqueda responde 503 y los clientes se devuelven sin el campo `orders`.
+- **El perfil `demo`** carga 7 clientes ficticios: los 6 `userId` que existen en el servicio de pedidos y uno sin pedidos. La carga se hace justo después de arrancar y tarda alrededor de un segundo; si ya existen, los omite. Sin el perfil la aplicación arranca sin datos.
+- **Para usar otro MongoDB,** define `MONGODB_URI` (por ejemplo `mongodb://host:27017/liverpool`).
+- **Para apagar la base:** `docker compose down` (con `-v` también borra los datos).
 
 > Si tu instalación de Docker usa el comando antiguo, es `docker-compose` en lugar de `docker compose`.
 
